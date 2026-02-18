@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "aidots",
   "owner": {
-    "name": "Len Zhou"
+    "name": "zhoulianglen"
   },
   "metadata": {
     "description": "AI Coding 工具个性化配置管理 - 扫描、备份、恢复、对比",
