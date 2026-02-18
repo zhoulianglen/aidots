@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "aidots",
+  "owner": {
+    "name": "Len Zhou"
+  },
+  "metadata": {
+    "description": "AI Coding 工具个性化配置管理 - 扫描、备份、恢复、对比",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "aidots",
+      "source": "./aidots",
+      "description": "Scan, backup, restore and diff all your AI coding tool configurations",
+      "version": "1.0.0"
+    }
+  ]
+}
