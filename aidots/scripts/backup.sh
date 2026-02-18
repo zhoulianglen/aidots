@@ -47,6 +47,9 @@ if [[ "$LOCALE" == "zh" ]]; then
     MSG_BACKUP_DIR="备份目录：%s"
     MSG_FILES_COPIED="  .%s/ — %d 个文件已复制"
     MSG_README_GENERATED="📝 README.md 已生成"
+    MSG_README_SKILLS_HEADING="已安装的技能"
+    MSG_README_TH_SKILL="技能"
+    MSG_README_TH_DESC="说明"
 else
     MSG_INIT_PROMPT="First time using aidots. Please set a backup directory:"
     MSG_INIT_OPT1="  [1] Use default location ~/dotai (recommended)"
@@ -67,6 +70,9 @@ else
     MSG_BACKUP_DIR="Backup directory: %s"
     MSG_FILES_COPIED="  .%s/ — %d files copied"
     MSG_README_GENERATED="📝 README.md generated"
+    MSG_README_SKILLS_HEADING="Installed Skills"
+    MSG_README_TH_SKILL="Skill"
+    MSG_README_TH_DESC="Description"
 fi
 
 # ── Dependency check ────────────────────────
@@ -251,6 +257,39 @@ copy_tool_files() {
     printf '%d' "$copied"
 }
 
+# ── Skill metadata extraction ──────────
+
+# Extract a field from SKILL.md YAML frontmatter
+# Usage: extract_skill_field <file> <field>
+extract_skill_field() {
+    local skill_file="$1"
+    local field="$2"
+    local in_frontmatter=false
+
+    while IFS= read -r line; do
+        if [[ "$line" == "---" ]]; then
+            if $in_frontmatter; then
+                break
+            fi
+            in_frontmatter=true
+            continue
+        fi
+        if $in_frontmatter; then
+            case "$line" in
+                ${field}:*)
+                    local value="${line#${field}:}"
+                    # Trim whitespace and surrounding quotes
+                    value=$(printf '%s' "$value" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+                    value=$(printf '%s' "$value" | sed 's/^"//;s/"$//' | sed "s/^'//;s/'$//")
+                    printf '%s' "$value"
+                    return 0
+                    ;;
+            esac
+        fi
+    done < "$skill_file"
+    return 1
+}
+
 # ── README generation ───────────────────────
 
 generate_readme() {
@@ -276,6 +315,24 @@ generate_readme() {
             .tools[] | select(.status == "found") |
             "| \(.name) | \(.files | length) |"
         '
+
+        # Skills section — extract descriptions from SKILL.md files
+        local skills_dir="${backup_dir}/.claude/skills"
+        if [[ -d "$skills_dir" ]]; then
+            local skill_files
+            skill_files=$(find "$skills_dir" -name "SKILL.md" -type f 2>/dev/null | sort)
+            if [[ -n "$skill_files" ]]; then
+                printf '\n## %s\n\n' "$MSG_README_SKILLS_HEADING"
+                printf '| %s | %s |\n' "$MSG_README_TH_SKILL" "$MSG_README_TH_DESC"
+                printf '|------|------|\n'
+                while IFS= read -r skill_file; do
+                    local sname sdesc
+                    sname=$(extract_skill_field "$skill_file" "name") || continue
+                    sdesc=$(extract_skill_field "$skill_file" "description") || sdesc=""
+                    printf '| %s | %s |\n' "$sname" "$sdesc"
+                done <<< "$skill_files"
+            fi
+        fi
 
         printf '\n---\n'
 

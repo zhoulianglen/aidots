@@ -7,5 +7,6 @@
 
 | ID | Time | T | Title | Read |
 |----|------|---|-------|------|
-| #3306 | 4:29 PM | 🟣 | Created AIDots Plugin Metadata Configuration | ~316 |
+| #3546 | 5:57 PM | 🔴 | Removed Misplaced Plugin.json from Repository Root | ~258 |
+| #3525 | 5:53 PM | 🔵 | Marketplace.json Defines Plugin Source as Nested Directory | ~332 |
 </claude-mem-context>
