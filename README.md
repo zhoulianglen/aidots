@@ -29,10 +29,11 @@ Tools not installed are automatically skipped. Sensitive files (credentials, tok
 
 ## Install
 
-As a Claude Code Skill:
+As a Claude Code Plugin:
 
 ```
-/skill install zhoulianglen/aidots
+/plugin marketplace add zhoulianglen/aidots
+/plugin install aidots@zhoulianglen-aidots
 ```
 
 ## Usage

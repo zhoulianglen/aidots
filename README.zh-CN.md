@@ -29,10 +29,11 @@ AI Coding 工具个性化配置管理 — 扫描、备份、恢复、对比你�
 
 ## 安装
 
-作为 Claude Code Skill 安装：
+作为 Claude Code Plugin 安装：
 
 ```
-/skill install zhoulianglen/aidots
+/plugin marketplace add zhoulianglen/aidots
+/plugin install aidots@zhoulianglen-aidots
 ```
 
 ## 使用
